@@ -10,12 +10,13 @@ namespace ConsoleApp
             var units = GetUnits();
             var factories = GetFactories();
 
-            Console.WriteLine($"Количество резервуаров: {tanks.Length}, установок: {units.Length}");
+            foreach (var tank in tanks)
+            {
+                var foundUnit = FindUnit(units, tanks, tank.Name);
+                var factory = FindFactory(factories, foundUnit);
 
-            var foundUnit = FindUnit(units, tanks, "Резервуар 2");
-            var factory = FindFactory(factories, foundUnit);
-
-            Console.WriteLine($"Резервуар 2 принадлежит установке {foundUnit.Name} и заводу {factory.Name}");
+                Console.WriteLine($"{tank.Name} принадлежит установке {foundUnit.Name} и заводу {factory.Name}");
+            }
 
             Console.WriteLine($"Общая сумма загрузки всех резервуаров: {GetTotalVolume(tanks)}");
         }
