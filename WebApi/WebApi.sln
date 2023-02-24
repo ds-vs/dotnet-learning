@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "externalApi", "externalApi\externalApi.csproj", "{DB8CE8A3-8BD8-4249-BFB3-CAE851B1FAC2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "externalApi", "externalApi\externalApi.csproj", "{DB8CE8A3-8BD8-4249-BFB3-CAE851B1FAC2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication01", "WebApplication01\WebApplication01.csproj", "{A566601C-55A6-42DE-A21E-FCD5C226B4B2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{DB8CE8A3-8BD8-4249-BFB3-CAE851B1FAC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB8CE8A3-8BD8-4249-BFB3-CAE851B1FAC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB8CE8A3-8BD8-4249-BFB3-CAE851B1FAC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A566601C-55A6-42DE-A21E-FCD5C226B4B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A566601C-55A6-42DE-A21E-FCD5C226B4B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A566601C-55A6-42DE-A21E-FCD5C226B4B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A566601C-55A6-42DE-A21E-FCD5C226B4B2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
