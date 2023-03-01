@@ -83,7 +83,7 @@ namespace ConsoleApp
             throw new Exception($"Файл {filePath} не найден.");
         }
 
-        public static Unit FindUnit(List<Unit> units, List<Tank> tanks, string unitName)
+        public static Unit FindUnit(IList<Unit> units, IList<Tank> tanks, string unitName)
         {
             for (int i = 0; i < units.Count; i++)
             {
@@ -96,12 +96,12 @@ namespace ConsoleApp
             return new Unit();
         }
 
-        public static Factory FindFactory(List<Factory> factories, Unit unit)
+        public static Factory FindFactory(IList<Factory> factories, Unit unit)
         {
             return factories.SingleOrDefault(f => f.Id == unit.FactoryId)!;
         }
 
-        public static int GetTotalVolume(List<Tank> units)
+        public static int GetTotalVolume(IEnumerable<Tank> units)
         {
             return units.Sum(u => u.Volume);
         }
