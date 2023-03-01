@@ -22,12 +22,23 @@ namespace ConsoleApp
                 Console.WriteLine(e.Message);
             }
 
+            var foundUnit = new Unit();
+            var factory = new Factory();
+
             foreach (var tank in tanks)
             {
-                var foundUnit = FindUnit(units, tanks, tank.Name!);
-                var factory = FindFactory(factories, foundUnit);
+                try 
+                {
+                    foundUnit = FindUnit(units, tanks, tank.Name!);
+                    factory = FindFactory(factories, foundUnit);
 
-                Console.WriteLine($"{tank.Name} принадлежит установке {foundUnit.Name} и заводу {factory.Name}");
+                    Console.WriteLine($"{tank.Name} принадлежит установке {foundUnit.Name} и заводу {factory.Name}");
+                }
+                catch (NullReferenceException e)
+                {
+                    Console.WriteLine($"Ошибка: {e.Message}");
+                    break;
+                }
             }
 
             Console.WriteLine($"Общая сумма загрузки всех резервуаров: {GetTotalVolume(tanks)}");
