@@ -4,15 +4,27 @@ namespace ConsoleApp
 {
     public class Program
     {
+        static string filesDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Data");
         static void Main(string[] args)
         {
-            var tanks = GetTanks();
-            var units = GetUnits();
-            var factories = GetFactories();
+            var tanks = new List<Tank>();
+            var units = new List<Unit>();
+            var factories = new List<Factory>();
+
+            try 
+            {
+                tanks = GetTanks();
+                units = GetUnits();
+                factories = GetFactories();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
 
             foreach (var tank in tanks)
             {
-                var foundUnit = FindUnit(units, tanks, tank.Name);
+                var foundUnit = FindUnit(units, tanks, tank.Name!);
                 var factory = FindFactory(factories, foundUnit);
 
                 Console.WriteLine($"{tank.Name} принадлежит установке {foundUnit.Name} и заводу {factory.Name}");
@@ -21,41 +33,50 @@ namespace ConsoleApp
             Console.WriteLine($"Общая сумма загрузки всех резервуаров: {GetTotalVolume(tanks)}");
         }
 
-        public static Factory[] GetFactories()
+        public static List<Factory> GetFactories()
         {
-            string fileName = "../../../Data/Factories.json";
-            string jsonString = File.ReadAllText(fileName);
+            var filePath = Path.Combine(filesDirectory, "Factories.json");
 
-            var factories = JsonSerializer.Deserialize<Factory[]>(jsonString)!;
-
-            return factories;
-        }
-
-        public static Tank[] GetTanks()
-        {
-            string fileName = "../../../Data/Tanks.json";
-            string jsonString = File.ReadAllText(fileName);
-
-            var tanks = JsonSerializer.Deserialize<Tank[]>(jsonString)!;
-
-            return tanks;
-        }
-
-        public static Unit[] GetUnits()
-        {
-            string fileName = "../../../Data/Units.json";
-            string jsonString = File.ReadAllText(fileName);
-
-            var units = JsonSerializer.Deserialize<Unit[]>(jsonString)!;
-
-            return units;
-        }
-
-        public static Unit FindUnit(Unit[] units, Tank[] tanks, string unitName)
-        {
-            for (int i = 0; i < units.Length; i++)
+            if(File.Exists(filePath))
             {
-                for (int j = 0; j < tanks.Length; j++)
+                string jsonString = File.ReadAllText(filePath);
+
+                return JsonSerializer.Deserialize<List<Factory>>(jsonString)!;
+            }
+            throw new Exception($"Файл {filePath} не найден.");
+        }
+
+        public static List<Tank> GetTanks()
+        {
+            var filePath = Path.Combine(filesDirectory, "Tanks.json");
+
+            if (File.Exists(filePath))
+            {    
+                var jsonString = File.ReadAllText(filePath);
+
+                return JsonSerializer.Deserialize<List<Tank>>(jsonString)!;
+            } 
+            throw new Exception($"Файл {filePath} не найден.");
+        }
+
+        public static List<Unit> GetUnits()
+        {
+            var filePath = Path.Combine(filesDirectory, "Units.json");
+
+            if(File.Exists(filePath))
+            {
+                var jsonString = File.ReadAllText(filePath);
+
+                return JsonSerializer.Deserialize<List<Unit>>(jsonString)!;
+            } 
+            throw new Exception($"Файл {filePath} не найден.");
+        }
+
+        public static Unit FindUnit(List<Unit> units, List<Tank> tanks, string unitName)
+        {
+            for (int i = 0; i < units.Count; i++)
+            {
+                for (int j = 0; j < tanks.Count; j++)
                 {
                     if (tanks[j].Name == unitName && tanks[j].UnitId == units[i].Id)
                         return units[i];
@@ -64,9 +85,9 @@ namespace ConsoleApp
             return new Unit();
         }
 
-        public static Factory FindFactory(Factory[] factories, Unit unit)
+        public static Factory FindFactory(List<Factory> factories, Unit unit)
         {
-            for (int i = 0; i < factories.Length; i++)
+            for (int i = 0; i < factories.Count; i++)
             {
                 if (factories[i].Id == unit.FactoryId)
                 {
@@ -76,11 +97,11 @@ namespace ConsoleApp
             return new Factory();
         }
 
-        public static int GetTotalVolume(Tank[] units)
+        public static int GetTotalVolume(List<Tank> units)
         {
             int total = 0;
 
-            for (int i = 0; i < units.Length; i++)
+            for (int i = 0; i < units.Count; i++)
             {
                 total += units[i].Volume;
             }
