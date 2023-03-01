@@ -87,25 +87,12 @@ namespace ConsoleApp
 
         public static Factory FindFactory(List<Factory> factories, Unit unit)
         {
-            for (int i = 0; i < factories.Count; i++)
-            {
-                if (factories[i].Id == unit.FactoryId)
-                {
-                    return factories[i];
-                }
-            }
-            return new Factory();
+            return factories.SingleOrDefault(f => f.Id == unit.FactoryId)!;
         }
 
         public static int GetTotalVolume(List<Tank> units)
         {
-            int total = 0;
-
-            for (int i = 0; i < units.Count; i++)
-            {
-                total += units[i].Volume;
-            }
-            return total;
+            return units.Sum(u => u.Volume);
         }
     }
 }
