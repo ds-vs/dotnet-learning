@@ -7,8 +7,9 @@ namespace ConsoleApp.Facilities
 {
     public interface IFacility
     {
-        public int Id { get; set; }
-        public string? Name { get; set; }
-        public string? Description { get; set; }
+        int Id { get; set; }
+        string? Name { get; set; }
+        string? Description { get; set; }
+        void Print();
     }
 }

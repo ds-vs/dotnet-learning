@@ -16,5 +16,10 @@ namespace ConsoleApp
         public string? Name { get; set; }
         public string? Description { get; set; }
         public int FactoryId { get; set; }
+
+        public void Print()
+        {
+            Console.WriteLine($"Номер: {Id} \nУстановка: {Name} \nОписание: {Description}");
+        }
     }
 }
