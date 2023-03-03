@@ -7,57 +7,110 @@ namespace ConsoleApp.Repository
     {
         public void Create(Factory facility)
         {
-            using(var connection = new NpgsqlConnection(DbConnection.GetConnectionString()))
+            try
             {
-                connection.Open();
-                string sqlCommand = @"INSERT INTO factory (""Id"", ""Name"", ""Description"") VALUES (@id, @name, @description)";
-                using (var cmd = new NpgsqlCommand(sqlCommand, connection))
+                using(var connection = new NpgsqlConnection(DbConnection.GetConnectionString()))
                 {
-                    cmd.Parameters.AddWithValue("id", facility.Id);
-                    cmd.Parameters.AddWithValue("name", facility.Name!);
-                    cmd.Parameters.AddWithValue("description", facility.Description!);
+                    connection.Open();
+                    string sqlCommand = @"INSERT INTO factory (""Id"", ""Name"", ""Description"") VALUES (@id, @name, @description)";
+                    using (var cmd = new NpgsqlCommand(sqlCommand, connection))
+                    {
+                        cmd.Parameters.AddWithValue("id", facility.Id);
+                        cmd.Parameters.AddWithValue("name", facility.Name!);
+                        cmd.Parameters.AddWithValue("description", facility.Description!);
 
-                    cmd.ExecuteNonQuery();
+                        cmd.ExecuteNonQuery();
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Ошибка: {e.Message}");
             }
         }
 
         public void Delete(int id)
         {
-            using(var connection = new NpgsqlConnection(DbConnection.GetConnectionString()))
+            try
             {
-                connection.Open();
-                string sqlCommand = @"DELETE FROM factory WHERE ""Id""=@id";
-                using (var cmd = new NpgsqlCommand(sqlCommand, connection))
+                using(var connection = new NpgsqlConnection(DbConnection.GetConnectionString()))
                 {
-                    cmd.Parameters.AddWithValue("id", id);
+                    connection.Open();
+                    string sqlCommand = @"DELETE FROM factory WHERE ""Id""=@id";
+                    using (var cmd = new NpgsqlCommand(sqlCommand, connection))
+                    {
+                        cmd.Parameters.AddWithValue("id", id);
 
-                    cmd.ExecuteNonQuery();
+                        cmd.ExecuteNonQuery();
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Ошибка: {e.Message}");
             }
         }
 
         public Factory Get(int id)
         {
-            using(var connection = new NpgsqlConnection(DbConnection.GetConnectionString()))
+            try 
             {
-                connection.Open();
-                string sqlCommand = @"SELECT * FROM factory WHERE ""Id""=@id";
-                using (var cmd = new NpgsqlCommand(sqlCommand, connection))
+                using(var connection = new NpgsqlConnection(DbConnection.GetConnectionString()))
                 {
-                    cmd.Parameters.AddWithValue("id", id);
-
-                    using (var reader = cmd.ExecuteReader())
+                    connection.Open();
+                    string sqlCommand = @"SELECT * FROM factory WHERE ""Id""=@id";
+                    using (var cmd = new NpgsqlCommand(sqlCommand, connection))
                     {
-                        while(reader.Read())
+                        cmd.Parameters.AddWithValue("id", id);
+
+                        using (var reader = cmd.ExecuteReader())
                         {
-                            Factory factory = ReadFactory(reader);
-                            return factory;
+                            while(reader.Read())
+                            {
+                                Factory factory = ReadFactory(reader);
+                                return factory;
+                            }
+                        }
+                    }
+                }
+                return new Factory();
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine($"Ошибка: {e.Message}");
+                return new Factory();
+            }
+        }
+
+        public List<Factory> GetAll() 
+        { 
+            try 
+            {
+                using(var connection = new NpgsqlConnection(DbConnection.GetConnectionString()))
+                {
+                    connection.Open();
+
+                    string sqlCommand = "SELECT * FROM factory";
+
+                    using (var cmd = new NpgsqlCommand(sqlCommand, connection))
+                    {
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            var factories = new List<Factory>();
+                            while (reader.Read())
+                            {
+                                factories.Add(ReadFactory(reader));
+                            }
+                            return factories;
                         }
                     }
                 }
             }
-            return new Factory();
+            catch(Exception e)
+            {
+                Console.WriteLine($"Ошибка: {e.Message}");
+                return new List<Factory>();
+            }
         }
 
         public void Update(int id, Factory facility)
@@ -66,17 +119,24 @@ namespace ConsoleApp.Repository
                 SET ""Name""=@name, ""Description""=@description
                 WHERE ""Id""=@id";
 
-            using (var connection = new NpgsqlConnection(DbConnection.GetConnectionString()))
+            try
             {
-                connection.Open();
-                using (var cmd = new NpgsqlCommand(sqlCommand, connection))
+                using (var connection = new NpgsqlConnection(DbConnection.GetConnectionString()))
                 {
-                    cmd.Parameters.AddWithValue("id", facility.Id);
-                    cmd.Parameters.AddWithValue("name", facility.Name!);
-                    cmd.Parameters.AddWithValue("description", facility.Description!);
+                    connection.Open();
+                    using (var cmd = new NpgsqlCommand(sqlCommand, connection))
+                    {
+                        cmd.Parameters.AddWithValue("id", id);
+                        cmd.Parameters.AddWithValue("name", facility.Name!);
+                        cmd.Parameters.AddWithValue("description", facility.Description!);
 
-                    cmd.ExecuteNonQuery();
+                        cmd.ExecuteNonQuery();
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Ошибка: {e.Message}");
             }
         }
 
