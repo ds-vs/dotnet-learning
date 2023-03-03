@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+﻿using ConsoleApp.Repository;
 
 namespace ConsoleApp
 {
@@ -6,85 +6,24 @@ namespace ConsoleApp
     {
         static void Main(string[] args)
         {
-            var tanks = GetTanks();
-            var units = GetUnits();
-            var factories = GetFactories();
+            var factory = new FactoryRepository();
 
-            foreach (var tank in tanks)
-            {
-                var foundUnit = FindUnit(units, tanks, tank.Name);
-                var factory = FindFactory(factories, foundUnit);
+            var factories = factory.GetAll();
+            var tanks = Facility.GetTanks();
+            var units = Facility.GetUnits();
 
-                Console.WriteLine($"{tank.Name} принадлежит установке {foundUnit.Name} и заводу {factory.Name}");
-            }
+            Facility.Find(tanks, units, factories);
+            Facility.GetTotalVolume(tanks);
+            Facility.GetMaxVolume(tanks);
 
-            Console.WriteLine($"Общая сумма загрузки всех резервуаров: {GetTotalVolume(tanks)}");
-        }
-
-        public static Factory[] GetFactories()
-        {
-            string fileName = "../../../Data/Factories.json";
-            string jsonString = File.ReadAllText(fileName);
-
-            var factories = JsonSerializer.Deserialize<Factory[]>(jsonString)!;
-
-            return factories;
-        }
-
-        public static Tank[] GetTanks()
-        {
-            string fileName = "../../../Data/Tanks.json";
-            string jsonString = File.ReadAllText(fileName);
-
-            var tanks = JsonSerializer.Deserialize<Tank[]>(jsonString)!;
-
-            return tanks;
-        }
-
-        public static Unit[] GetUnits()
-        {
-            string fileName = "../../../Data/Units.json";
-            string jsonString = File.ReadAllText(fileName);
-
-            var units = JsonSerializer.Deserialize<Unit[]>(jsonString)!;
-
-            return units;
-        }
-
-        public static Unit FindUnit(Unit[] units, Tank[] tanks, string unitName)
-        {
-            for (int i = 0; i < units.Length; i++)
-            {
-                for (int j = 0; j < tanks.Length; j++)
-                {
-                    if (tanks[j].Name == unitName && tanks[j].UnitId == units[i].Id)
-                        return units[i];
-                }
-            }
-            return new Unit();
-        }
-
-        public static Factory FindFactory(Factory[] factories, Unit unit)
-        {
-            for (int i = 0; i < factories.Length; i++)
-            {
-                if (factories[i].Id == unit.FactoryId)
-                {
-                    return factories[i];
-                }
-            }
-            return new Factory();
-        }
-
-        public static int GetTotalVolume(Tank[] units)
-        {
-            int total = 0;
-
-            for (int i = 0; i < units.Length; i++)
-            {
-                total += units[i].Volume;
-            }
-            return total;
+            factory.Create(new Factory 
+            { 
+                Id = 3, 
+                Name = "НПЗ№3", 
+                Description = "Третий нефтеперерабатывающий завод"
+            });
+            factory.Get(3).Print();
+            factory.Delete(3);
         }
     }
 }
