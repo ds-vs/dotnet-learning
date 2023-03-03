@@ -6,23 +6,34 @@ namespace ConsoleApp
     {
         static void Main(string[] args)
         {
-            //var tanks = Facility.GetTanks();
-            //var units = Facility.GetUnits();
-            //var factories = Facility.GetFactories();
-
-            //Facility.Find(tanks, units, factories);
-
-            //Facility.ShowTotalVolume(tanks);
-            //Facility.ShowMaxVolume(tanks);
-
             var factory = new Factory();
             factory.Id = 7;
             factory.Name = "test";
             factory.Description = "desc";
 
             var factoryRepository = new FactoryRepository();
+       
+            Console.WriteLine("1. Добавить / 2. Получить / 3. Удалить");
 
-            factoryRepository.Create(factory);
+            while(true)
+            {
+                int key = int.Parse(Console.ReadLine()!);
+
+                switch(key)
+                {
+                    case 1:
+                        factoryRepository.Create(factory);
+                        break;
+                    case 2:
+                        factoryRepository.Get(7).Print();
+                        break;
+                    case 3:
+                        factoryRepository.Delete(7);
+                        break;
+                    default:
+                        return; 
+                }
+            }
         }
     }
 }

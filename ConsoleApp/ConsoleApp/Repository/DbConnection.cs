@@ -12,7 +12,7 @@ namespace ConsoleApp
         {
             var host = "Host=localhost:5412;";
             var username = "Username=postgres;";
-            var password = "Password=;";
+            var password = "Password=140208;";
             var database = "Database=facilities";
 
             return host + username + password + database;
