@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using FacilitiesAPI.DAL;
 using FacilitiesAPI.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -14,21 +10,24 @@ namespace FacilitiesAPI.Controllers
     public class UnitController : ControllerBase
     {
         private readonly AppDbContext _context;
+
         public UnitController(AppDbContext context)
         {
             _context = context;
         }
 
-        [HttpGet]
+        private bool UnitExists(int id) => _context.Units.Any(u => u.Id == id);
+
+        [HttpGet("all")]
         public async Task<ActionResult<IEnumerable<Unit>>> GetAll()
         {
             return await _context.Units.ToListAsync();
         }
 
-        [HttpGet("id")]
-        public async Task<ActionResult<Unit>> GetUnit(int id)
+        [HttpGet("{unitId}")]
+        public async Task<ActionResult<Unit>> GetUnit(int unitId)
         {
-            var unit = await _context.Units.FindAsync(id);
+            var unit = await _context.Units.FindAsync(unitId);
 
             if (unit == null)
                 return NotFound();
@@ -36,19 +35,25 @@ namespace FacilitiesAPI.Controllers
             return Ok(unit);    
         }
 
-        [HttpPost]
-        public async Task<ActionResult<Unit>> PostUnit(Unit newUnit)
+        [HttpPost()]
+        public async Task<ActionResult<Unit>> PostUnit(string name, string description)
         {
-            _context.Units.Add(newUnit);
+            var unit = new Unit()
+            {
+                Name = name,
+                Description = description
+            };
+
+            _context.Units.Add(unit);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetUnit), new { id = newUnit.Id }, newUnit);
+            return Ok();
         }
 
-        [HttpDelete("id")]
-        public async Task<ActionResult<Unit>> DeleteUnit(int id)
+        [HttpDelete("{unitId}")]
+        public async Task<ActionResult<Unit>> DeleteUnit(int unitId)
         {
-            var unit = await _context.Units.FindAsync(id);
+            var unit = await _context.Units.FindAsync(unitId);
 
             if (unit == null)
                 return NotFound();
@@ -56,6 +61,32 @@ namespace FacilitiesAPI.Controllers
             _context.Units.Remove(unit);
             await _context.SaveChangesAsync();
 
+            return Ok();
+        }
+
+        [HttpPut("{unitId}")]
+        public async Task<ActionResult<Unit>> UpdateUnit(int unitId, string name, string description)
+        {
+            var unit = new Unit() 
+            {
+                Id = unitId,
+                Name = name,
+                Description = description
+            };
+
+            _context.Entry(unit).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UnitExists(unitId))
+                    return NotFound();
+                else
+                    throw;
+            }
             return Ok();
         }
     }

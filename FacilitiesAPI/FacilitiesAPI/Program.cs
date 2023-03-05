@@ -5,8 +5,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
+var connectionString = builder.Configuration.GetConnectionString("Pgsql");
+
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql("Host=localhost:5412;Database=facilities_db;Username=postgres;Password=140208")
+    options.UseNpgsql(connectionString)
 );
 
 builder.Services.AddEndpointsApiExplorer();
