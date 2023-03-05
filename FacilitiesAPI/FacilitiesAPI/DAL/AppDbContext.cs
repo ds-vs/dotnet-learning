@@ -6,7 +6,6 @@ namespace FacilitiesAPI.DAL
 {
     public class AppDbContext: DbContext
     {
-        public DbSet<Factory> Factories { get; set; } = null!;
         public DbSet<Tank> Tanks { get; set; } = null!;
         public DbSet<Unit> Units { get; set; } = null!;
 
