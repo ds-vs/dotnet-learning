@@ -1,4 +1,7 @@
 using FacilitiesAPI.DAL;
+using FacilitiesAPI.DAL.Intefaces;
+using FacilitiesAPI.DAL.Repository;
+using FacilitiesAPI.Models;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +13,9 @@ var connectionString = builder.Configuration.GetConnectionString("Pgsql");
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString)
 );
+
+builder.Services.AddScoped<UnitRepository>();
+builder.Services.AddScoped<TankRepository>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
